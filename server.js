@@ -5,9 +5,10 @@ const logger = require('morgan')
 const http = require('http')
 const mongoose = require('mongoose')
 const passport = require('passport')
+const fileUpload = require('express-fileupload')
+const jwtDecode = require('jwt-decode')
 
 const config = require('./config')
-
 const app = express();
 const port = process.env.port || 3001
 app.set('port', port)
@@ -20,6 +21,7 @@ app.use(bodyParser.urlencoded({
   extended: true
 }))
 app.use(cookieParser());
+app.use(fileUpload())
 
 const { url, options } = config.mongodb
 mongoose.connect(url, options).then(() => {
@@ -31,14 +33,22 @@ mongoose.connect(url, options).then(() => {
   app.use(passport.initialize())
   require('./middleware/passport')(passport)
   const passportAuth = passport.authenticate('jwt', { session: false })
+  const tokenToReq = (req, res, next) => {
+    token = (req.headers.authorization);
+    decode = jwtDecode(token)
+    req.uid = decode.id
+    next()
+  }
   // require module routes
   const auth = require('./routes/auth')
+  const upload = require('./routes/upload')
   const student = require('./routes/student')
   const PythonConnector = require('./routes/PythonConnector')
   // use module
   app.use('/auth', auth)
+  app.use('/upload', passportAuth, tokenToReq, upload)
   app.use('/stu', student)
-  app.use('/deep_server',PythonConnector)
+  app.use('/deep_server', PythonConnector)
 }).catch(err => {
   console.error(err);
   process.exit()
