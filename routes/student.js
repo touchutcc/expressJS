@@ -13,21 +13,55 @@ var PythonServer = path.join(dirProject, 'deep_server_with_facenet')
 var dataBase = path.join(PythonServer, 'database')
 var dataUpload = path.join(dataBase, 'dataUpload')
 
+const uploadFile = async (files, stu, cb) => {
+    const uploadFile = files.file
+    const fileName = files.file.name
+    const fileType = fileName.split('.').pop()
+    const fileSave = `${stu._id}_${(new Date()).getTime()}.${fileType}`
+    const dirUploadFile = path.join(dataUpload, fileSave)
+    uploadFile.mv(dirUploadFile, err => {
+        cb(fileSave, err)
+    })
+}
+const deleteUploadFile = async (fileName, cb) => {
+    const delDeleteFile = path.join(dataUpload, fileName)
+    fs.unlink(delDeleteFile, err => {
+        cb(err)
+    })
+}
+
+// =======================================================
+const url = "http://127.0.0.1:5000"
+const pythonUrl = (path) => {
+    return `${url}/${(!path ? '': path)}`
+}
+
+router.post('/data_set/video',(req,res,next) => {
+    options = {
+        method:req.method,
+        uri:url,
+        form:{
+            name:"Mark.MOV"
+        }
+    }
+    request(options).then(v => {
+        res.status(200).json(v)
+    }).catch(err => {
+        res.status(400).json(err)
+    })
+})
+// =======================================================
+
 router.post('/', (req, res, next) => {
     // standard info
     const { stuId, name, lastname, line_id } = req.body
     const { errors, isValid } = studentValidator(req.body)
     if (!isValid) return res.status(400).json(errors)
-    // file Upload
-    const uploadFile = req.files.file
-    const fileName = req.files.file.name
-    const fileType = fileName.split('.').pop()
+
     Student.findOne({ stuId: stuId }).then(stu => {
-        if (stu) {
-            return res.status(400).json({
-                stuId: 'Student ID already exists'
-            })
-        } else {
+        if (stu)
+            return res.status(400).json({ stuId: 'Student ID already exists' })
+        else {
             const newStudent = new Student({
                 stuId: stuId,
                 name: name,
@@ -35,29 +69,17 @@ router.post('/', (req, res, next) => {
                 line_id: line_id
             })
             newStudent.save().then(stu => {
-                const fileSave = `${stu._id}_${(new Date()).getTime()}.${fileType}`
-                const dirUploadFile = path.join(dataUpload, fileSave)
-                uploadFile.mv(dirUploadFile, err => {
-                    if (err) return res.status(500).send(err)
-                    /*options = {
-                        method: "POST",
-                        uri:'http://127.0.0.1:5000/',
-                        body:{
-                            fileName:fileName,
-                            stuId:stu._id
-                        }
-                    }
-                    require(options).then(v => {
-                        console.log(v);
-                    }).catch(err => {
-                        console.error(err);
-                        return res.status(400).json(err)
-                    })*/
+                uploadFile(req.files, stu, (file, err) => {
+                    if (err) return res.status(500).json(err)
+                    deleteUploadFile(file, err => {
+                        if (err) return res.status(500).json(err)
+                        // face Detection
+                        res.json({
+                            ok: true,
+                            data: stu
+                        })
+                    })
                 })
-                /*res.json({
-                    ok: true,
-                    data: stu
-                })*/ //for without upload funtion
             })
         }
     })
@@ -95,7 +117,6 @@ router.get('/:stuId', (req, res, next) => {
 router.delete('/:_id', (req, res, next) => {
     const { _id } = req.params
     Student.deleteOne({ _id: _id }).then(stu => {
-        //delete video file
         //delete dataSet folder
         return res.status(200).json(stu)
     }).catch(err => {

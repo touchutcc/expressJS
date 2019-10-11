@@ -24,7 +24,7 @@ app.use(cookieParser());
 app.use(fileUpload())
 
 const { url, options } = config.mongodb
-mongoose.connect(url, options).then(() => {
+//mongoose.connect(url, options).then(() => {
   console.log('Mongodb Connected at: ', url);
   // Require MongoDB Schema
   require('./models/User')
@@ -47,12 +47,12 @@ mongoose.connect(url, options).then(() => {
   // use module
   app.use('/auth', auth)
   app.use('/upload', passportAuth, tokenToReq, upload)
-  app.use('/stu', student)
+  app.use('/stu',student)
   app.use('/deep_server',passportAuth,tokenToReq,PythonConnector)
-}).catch(err => {
-  console.error(err);
-  //process.exit()
-})
+// }).catch(err => {
+//   console.error(err);
+//   process.exit()
+// })
 
 app.use((err, req, res, next) => {
   // set locals, only providing error in development
