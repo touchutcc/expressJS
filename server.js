@@ -24,11 +24,12 @@ app.use(cookieParser());
 app.use(fileUpload())
 
 const { url, options } = config.mongodb
-//mongoose.connect(url, options).then(() => {
+mongoose.connect(url, options).then(() => {
   console.log('Mongodb Connected at: ', url);
   // Require MongoDB Schema
   require('./models/User')
   require('./models/Student')
+  require('./models/Course')
   // require passport middleware
   app.use(passport.initialize())
   require('./middleware/passport')(passport)
@@ -36,23 +37,25 @@ const { url, options } = config.mongodb
   const tokenToReq = (req, res, next) => {
     token = (req.headers.authorization);
     decode = jwtDecode(token)
-    req.uid = decode.id
+    req.uid = decode.id //user objectid
     next()
   }
   // require module routes
   const auth = require('./routes/auth')
   const upload = require('./routes/upload')
   const student = require('./routes/student')
+  const course = require('./routes/course')
   const PythonConnector = require('./routes/PythonConnector')
   // use module
-  app.use('/auth', auth)
+  app.use('/auth', auth) //auth/login
   app.use('/upload', passportAuth, tokenToReq, upload)
-  app.use('/stu',student)
+  app.use('/cour', passportAuth, tokenToReq, course)
+  app.use('/stu', student)
   app.use('/deep_server',passportAuth,tokenToReq,PythonConnector)
-// }).catch(err => {
-//   console.error(err);
-//   process.exit()
-// })
+}).catch(err => {
+  console.error(err);
+  process.exit()
+})
 
 app.use((err, req, res, next) => {
   // set locals, only providing error in development
