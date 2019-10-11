@@ -29,6 +29,7 @@ mongoose.connect(url, options).then(() => {
   // Require MongoDB Schema
   require('./models/User')
   require('./models/Student')
+  require('./models/Course')
   // require passport middleware
   app.use(passport.initialize())
   require('./middleware/passport')(passport)
@@ -36,22 +37,24 @@ mongoose.connect(url, options).then(() => {
   const tokenToReq = (req, res, next) => {
     token = (req.headers.authorization);
     decode = jwtDecode(token)
-    req.uid = decode.id
+    req.uid = decode.id //user objectid
     next()
   }
   // require module routes
   const auth = require('./routes/auth')
   const upload = require('./routes/upload')
   const student = require('./routes/student')
+  const course = require('./routes/course')
   const PythonConnector = require('./routes/PythonConnector')
   // use module
-  app.use('/auth', auth)
+  app.use('/auth', auth) //auth/login
   app.use('/upload', passportAuth, tokenToReq, upload)
+  app.use('/cour', passportAuth, tokenToReq, course)
   app.use('/stu', student)
   app.use('/deep_server',passportAuth,tokenToReq,PythonConnector)
 }).catch(err => {
   console.error(err);
-  //process.exit()
+  process.exit()
 })
 
 app.use((err, req, res, next) => {

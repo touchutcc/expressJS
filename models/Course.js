@@ -2,6 +2,10 @@ const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 
 const CourseSchema = new Schema({
+    userId:{
+        type:this.schema.Types.ObjectId,
+        required:true
+    },
     name: {
         type:String,
         required:true
