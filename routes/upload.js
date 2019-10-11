@@ -2,26 +2,39 @@ const express = require('express')
 const router = express.Router()
 const fs = require('fs')
 const path = require('path')
+const request = require('request-promise')
 
-var dirUpload = path.dirname(__dirname)
-dirUpload = path.join(dirUpload,'upload')
+var dirServer = path.dirname(__dirname)
+var dirProject = path.dirname(dirServer)
+var PythonServer = path.join(dirProject, 'deep_server_with_facenet')
+var dataBase = path.join(PythonServer, 'database')
+var dataUpload = path.join(dataBase, 'dataUpload')
 
-router.post('/',(req,res) => {
-    console.log('====================================');
-    console.log(req.uid);
-    console.log('====================================');
+router.post('/', (req, res) => {
     let uploadFile = req.files.file
     const fileName = req.files.file.name
-    const dirUploadFile = path.join(dirUpload,fileName)
-    uploadFile.mv(dirUploadFile,err => {
-        if (err)   return res.status(500).send(err)
-        res.json({
-            ok:1
+    const { stuId } = req.body
+    const dirUploadFile = path.join(dataUpload, fileName)
+    uploadFile.mv(dirUploadFile, err => {
+        if (err) return res.status(500).send(err)
+        options = {
+            method:"POST",
+            uri:'http://127.0.0.1:5000',
+            body:{
+                fileName:fileName,
+                stuId:stuId
+            }
+        }
+        request(options).then(v => {
+        }).catch(err => {
         })
+        /*res.json({
+            ok: 1
+        })*/
     })
 })
 
-router.delete('/:_id',(req,res) => {
+router.delete('/:_id', (req, res) => {
 
 })
 

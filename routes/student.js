@@ -4,7 +4,7 @@ const mongoose = require('mongoose')
 const Student = mongoose.model('student')
 
 router.post('/', (req, res, next) => {
-    const { stuId, name, line_id } = req.body
+    const { stuId, name, lastname, line_id } = req.body
     Student.findOne({ stuId: stuId }).then(stu => {
         if (stu) {
             return res.status(400).json({
@@ -14,6 +14,7 @@ router.post('/', (req, res, next) => {
             const newStudent = new Student({
                 stuId: stuId,
                 name: name,
+                lasename: lastname,
                 line_id: line_id
             })
             newStudent.save().then(stu => {
@@ -29,7 +30,7 @@ router.post('/', (req, res, next) => {
 router.put('/:_id', (req, res, next) => {
     const { _id } = req.params
     const { line_id } = req.body
-    Student.updateOne({ _id: _id }, { line_id: line_id }).then(stu => {
+    Student.updateOne({ _id: _id }, { name: name, lastname: lastname, line_id: line_id }).then(stu => {
         return res.status(200).json(stu)
     }).catch(err => {
         console.error(err)
