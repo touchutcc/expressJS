@@ -4,12 +4,6 @@ const fs = require('fs')
 const path = require('path')
 const request = require('request-promise')
 
-var dirServer = path.dirname(__dirname)
-var dirProject = path.dirname(dirServer)
-var PythonServer = path.join(dirProject, 'deep_server_with_facenet')
-var dataBase = path.join(PythonServer, 'database')
-var dataUpload = path.join(dataBase, 'dataUpload')
-
 router.post('/', (req, res) => {
     let uploadFile = req.files.file
     const fileName = req.files.file.name
@@ -28,9 +22,6 @@ router.post('/', (req, res) => {
         request(options).then(v => {
         }).catch(err => {
         })
-        /*res.json({
-            ok: 1
-        })*/
     })
 })
 

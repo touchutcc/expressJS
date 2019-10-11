@@ -48,10 +48,10 @@ mongoose.connect(url, options).then(() => {
   app.use('/auth', auth)
   app.use('/upload', passportAuth, tokenToReq, upload)
   app.use('/stu', student)
-  app.use('/deep_server', PythonConnector)
+  app.use('/deep_server',passportAuth,tokenToReq,PythonConnector)
 }).catch(err => {
   console.error(err);
-  process.exit()
+  //process.exit()
 })
 
 app.use((err, req, res, next) => {
