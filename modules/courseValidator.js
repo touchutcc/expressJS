@@ -11,15 +11,15 @@ module.exports = ValidateCourse = data => {
     data.endTime = !isEmpty(data.endTime) ? data.endTime : ''
     
     if (Validator.isEmpty(data.stuId))
-        errors.stuId = 'student ID field is required'
+        errors.stuId = 'Student ID field is required'
     if (Validator.isEmpty(data.name))
         errors.name = 'Name field is required'
     if (Validator.isEmpty(data.location))
-        errors.location = 'LastName field is required'
+        errors.location = 'Location field is required'
     if (Validator.isEmpty(data.stateTime))
-        errors.stateTime = 'LastName field is required'
+        errors.stateTime = 'StateTime field is required'
     if (Validator.isEmpty(data.endTime))
-        errors.endTime = 'LastName field is required'
+        errors.endTime = 'EndTime field is required'
 
     return {
         errors,
