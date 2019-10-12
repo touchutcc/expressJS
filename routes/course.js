@@ -2,13 +2,14 @@ const express = require('express');
 const router = express.Router();
 const mongoose = require('mongoose')
 const Course = mongoose.model('course')
+const courseValidator = require('../modules/courseValidator')
 
 
 router.post('/', (req, res, next) => {
     // standard info
     const { userId, name, group, location, stateTime, endTime, studentList, classU } = req.body
-    //const { errors, isValid } = studentValidator(req.body)
-    //if (!isValid) return res.status(400).json(errors)
+    const { errors, isValid } = courseValidator(req.body)
+    if (!isValid) return res.status(400).json(errors)
     Course.findOne({ name: name, group: group }).then(cour => {
         if (cour) {
             return res.status(400).json({
