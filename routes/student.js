@@ -39,14 +39,15 @@ const pythonUrl = (path) => {
 router.post('/data_set/video',(req,res,next) => {
     options = {
         method:req.method,
-        uri:url,
+        uri:`${url}/data_set/video`,
         form:{
-            name:"Mark.MOV"
+            name:"Bobby.MOV"
         }
     }
     request(options).then(v => {
         res.status(200).json(v)
     }).catch(err => {
+        console.error(err)
         res.status(400).json(err)
     })
 })

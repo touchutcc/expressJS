@@ -14,6 +14,7 @@ const port = process.env.port || 3001
 app.set('port', port)
 const server = http.createServer(app)
 const io = require('socket.io')(server)
+const url = config.mongodb.url
 
 app.use(logger('dev'))
 app.use(bodyParser.json())
@@ -23,8 +24,7 @@ app.use(bodyParser.urlencoded({
 app.use(cookieParser());
 app.use(fileUpload())
 
-const { url, options } = config.mongodb
-mongoose.connect(url, options).then(() => {
+//mongoose.connect(url, options).then(() => {
   console.log('Mongodb Connected at: ', url);
   // Require MongoDB Schema
   require('./models/User')
@@ -42,20 +42,18 @@ mongoose.connect(url, options).then(() => {
   }
   // require module routes
   const auth = require('./routes/auth')
-  const upload = require('./routes/upload')
   const student = require('./routes/student')
   const course = require('./routes/course')
   const PythonConnector = require('./routes/PythonConnector')
   // use module
   app.use('/auth', auth) //auth/login
-  app.use('/upload', passportAuth, tokenToReq, upload)
   app.use('/cour', passportAuth, tokenToReq, course)
   app.use('/stu', student)
-  app.use('/deep_server',passportAuth,tokenToReq,PythonConnector)
-}).catch(err => {
+  app.use('/deep_server',PythonConnector)
+/*}).catch(err => {
   console.error(err);
   process.exit()
-})
+})*/
 
 app.use((err, req, res, next) => {
   // set locals, only providing error in development
