@@ -24,12 +24,13 @@ app.use(bodyParser.urlencoded({
 app.use(cookieParser());
 app.use(fileUpload())
 
-//mongoose.connect(url, options).then(() => {
+mongoose.connect(url, options).then(() => {
   console.log('Mongodb Connected at: ', url);
   // Require MongoDB Schema
   require('./models/User')
   require('./models/Student')
   require('./models/Course')
+  require('./models/Class')
   // require passport middleware
   app.use(passport.initialize())
   require('./middleware/passport')(passport)
@@ -44,16 +45,18 @@ app.use(fileUpload())
   const auth = require('./routes/auth')
   const student = require('./routes/student')
   const course = require('./routes/course')
+  const classU = require('./routes/class')
   const PythonConnector = require('./routes/PythonConnector')
   // use module
   app.use('/auth', auth) //auth/login
   app.use('/cour', passportAuth, tokenToReq, course)
   app.use('/stu', student)
-  app.use('/deep_server',PythonConnector)
-/*}).catch(err => {
+  app.use('clas', classU)
+  app.use('/deep_server',passportAuth,tokenToReq,PythonConnector)
+}).catch(err => {
   console.error(err);
   process.exit()
-})*/
+})
 
 app.use((err, req, res, next) => {
   // set locals, only providing error in development

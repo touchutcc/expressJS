@@ -1,19 +1,20 @@
 const express = require('express');
 const router = express.Router();
 const mongoose = require('mongoose')
-const Course = mongoose.model('course')
+const Class = mongoose.model('class')
+const courseValidator = require('../modules/classValidator')
 
 
 router.post('/', (req, res, next) => {
     // standard info
     const { userId, name, group, location, stateTime, endTime, studentList, classU } = req.body
-    //const { errors, isValid } = studentValidator(req.body)
-    //if (!isValid) return res.status(400).json(errors)
+    const { errors, isValid } = courseValidator(req.body)
+    if (!isValid) return res.status(400).json(errors)
     Course.findOne({ name: name, group: group }).then(cour => {
         if (cour) {
             return res.status(400).json({
-                name: 'Student ID already exists',
-                group: 'Course ID already exists'
+                name: 'Name already exists',
+                group: 'Group already exists'
             })
         } else {
             const newCourse = new Course({
@@ -65,16 +66,6 @@ router.put('/:_id', (req, res, next) => {
     })
 })
 
-/*router.get('/:stuId', (req, res, next) => {
-    const { stuId } = req.params
-    Student.find({ stuId: { $regex: stuId } }).then(stu => {
-        res.json({
-            ok: true,
-            data: stu
-        })
-    })
-})*/
-
  router.get('/', (req, res, next) => {
     const userObjectId = req.uid
     Course.find({ userId: userObjectId }).then(courList => {
@@ -87,8 +78,6 @@ router.put('/:_id', (req, res, next) => {
 router.delete('/:_id', (req, res, next) => {
     const { _id } = req.params
     Course.deleteOne({ _id: _id }).then(cour => {
-        //delete video file
-        //delete dataSet folder
         return res.status(200).json(cour)
     }).catch(err => {
         console.error(err)
