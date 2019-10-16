@@ -20,17 +20,13 @@ const CourseSchema = new Schema({
     },
     stateTime:{
         type:Date,
-        required:true
+        required:false //todo
     },
     endTime:{
         type:Date,
-        required:true
+        required:false //todo
     },
     studentList:{
-        type:[Schema.Types.ObjectId],
-        required:false
-    },
-    classU:{
         type:[Schema.Types.ObjectId],
         required:false
     }

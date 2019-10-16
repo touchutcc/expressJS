@@ -2,9 +2,9 @@ const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 
 const ClassSchema = new Schema({
-    classId: {
-        type: String,
-        required: true
+    courseId:{
+        type:Schema.Types.ObjectId,
+        required:true
     },
     startTime: {
         type: String,

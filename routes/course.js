@@ -4,11 +4,11 @@ const mongoose = require('mongoose')
 const Course = mongoose.model('course')
 const courseValidator = require('../modules/courseValidator')
 
-
 router.post('/', (req, res, next) => {
     // standard info
-    const { userId, name, group, location, stateTime, endTime, studentList, classU } = req.body
+    const { name, group, location, startTime, endTime, studentList } = req.body
     const { errors, isValid } = courseValidator(req.body)
+    console.log(errors, isValid);
     if (!isValid) return res.status(400).json(errors)
     Course.findOne({ name: name, group: group }).then(cour => {
         if (cour) {
@@ -18,62 +18,45 @@ router.post('/', (req, res, next) => {
             })
         } else {
             const newCourse = new Course({
-                userId: userId,
+                userId: req.uid,
                 name: name,
                 group: group,
                 location: location,
-                stateTime: stateTime,
-                endTime: endTime,
-                studentList: studentList,
-                classU: classU
+                startTime: Date.now(), // startTime todo
+                endTime: Date.now(), // endTime todo
+                studentList: studentList
             })
             newCourse.save().then(cour => {
-                const fileSave = `${cour._id}_${(new Date()).getTime()}.${fileType}`
-                const dirUploadFile = path.join(dataUpload, fileSave)
-                uploadFile.mv(dirUploadFile, err => {
-                    if (err) return res.status(500).send(err)
-                    /*options = {
-                        method: "POST",
-                        uri:'http://127.0.0.1:5000/',
-                        body:{
-                            fileName:fileName,
-                            stuId:stu._id
-                        }
-                    }
-                    require(options).then(v => {
-                        console.log(v);
-                    }).catch(err => {
-                        console.error(err);
-                        return res.status(400).json(err)
-                    })*/
-                })
-                /*res.json({
+                res.json({
                     ok: true,
-                    data: stu
-                })*/ //for without upload funtion
+                    data: cour
+                })
+            }).catch(err => {
+                console.error(err);
+
             })
         }
-    })//course.find
+    })
 })
 
 router.put('/:_id', (req, res, next) => {
     const { _id } = req.params
-    const { userId, name, group, location, stateTime, endTime, studentList, classU} = req.body
-    Course.updateOne({ _id: _id }, { userId: userId, name: name, group: group, location: location, stateTime: stateTime, endTime: endTime, studentList: studentList, classU: classU }).then(cour => {
+    const { name, group, location, stateTime, endTime, studentList } = req.body
+    Course.updateOne({ _id: _id }, {name: name, group: group, location: location, stateTime: stateTime, endTime: endTime, studentList: studentList }).then(cour => {
         return res.status(200).json(cour)
     }).catch(err => {
         console.error(err)
     })
 })
 
- router.get('/', (req, res, next) => {
+router.get('/', (req, res, next) => { // get All
     const userObjectId = req.uid
     Course.find({ userId: userObjectId }).then(courList => {
-        console.log('====================================');
-        console.log(courList);
-        console.log('====================================');
+        res.status(200).json(courList)
+    }).catch(err => {
+        console.error(err);
     })
-}) 
+})
 
 router.delete('/:_id', (req, res, next) => {
     const { _id } = req.params
