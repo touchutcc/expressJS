@@ -14,7 +14,6 @@ const port = process.env.port || 3001
 app.set('port', port)
 const server = http.createServer(app)
 const io = require('socket.io')(server)
-const url = config.mongodb.url
 
 app.use(logger('dev'))
 app.use(bodyParser.json())
@@ -24,6 +23,7 @@ app.use(bodyParser.urlencoded({
 app.use(cookieParser());
 app.use(fileUpload())
 
+const { url, options } = config.mongodb
 mongoose.connect(url, options).then(() => {
   console.log('Mongodb Connected at: ', url);
   // Require MongoDB Schema
