@@ -1,8 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const mongoose = require('mongoose')
-const Class = mongoose.model('class')
-const courseValidator = require('../modules/classValidator')
+const Course = mongoose.model('course')
+const courseValidator = require('../modules/courseValidator')
 
 
 router.post('/', (req, res, next) => {

@@ -51,7 +51,7 @@ mongoose.connect(url, options).then(() => {
   app.use('/auth', auth) //auth/login
   app.use('/cour', passportAuth, tokenToReq, course)
   app.use('/stu', student)
-  app.use('clas', classU)
+  app.use('/clas', classU)
   app.use('/deep_server',passportAuth,tokenToReq,PythonConnector)
 }).catch(err => {
   console.error(err);
