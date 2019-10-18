@@ -18,7 +18,7 @@ const CourseSchema = new Schema({
         type:String,
         required:true
     },
-    stateTime:{
+    startTime:{
         type:Date,
         required:false //todo
     },

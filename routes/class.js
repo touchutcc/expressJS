@@ -20,8 +20,8 @@ router.post('/', (req, res, next) => {
     if (!isValid) return res.status(400).json(errors)
     const newClass = new Class({
         courseId: courseId,
-        startTime: startTime,
-        endTime: endTime,
+        startTime: Date.now(),
+        endTime: Date.now(),
         studentList: studentList
     })
     newClass.save().then(clas => {
