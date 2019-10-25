@@ -7,7 +7,6 @@ const mongoose = require('mongoose')
 const passport = require('passport')
 const fileUpload = require('express-fileupload')
 const jwtDecode = require('jwt-decode')
-
 const config = require('./config')
 const app = express();
 const port = process.env.port || 3001
@@ -47,6 +46,8 @@ mongoose.connect(url, options).then(() => {
   const course = require('./routes/course')
   const classU = require('./routes/class')
   const PythonConnector = require('./routes/PythonConnector')
+  require('./routes/socket')(io)
+  
   // use module
   app.use('/auth', auth) //auth/login
   app.use('/cour', passportAuth, tokenToReq, course)

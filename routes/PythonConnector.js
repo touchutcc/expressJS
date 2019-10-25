@@ -8,10 +8,10 @@ const pythonUrl = (path) => {
 }
 router.post('/model',(req,res) => {
     const {idList} = req.body
-    const arrayData = ["Bobby.MOV","Mark.MOV"] // for test only
+    const arrayData = ["aom","bobby","game","max","new","tee"] // for test only
     options = {
         method:req.method,
-        uri:`${url}/array`,
+        uri:`${url}/model`,
         form:{
             data:JSON.stringify(arrayData)
         }
