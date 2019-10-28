@@ -1,9 +1,6 @@
 const fs = require('fs')
+const {pythonServer} = require('../config')
 const request = require('request-promise')
-const decodeBase64Image = async (encodeData, type, decode) => {
-    const buffer = new Buffer.from(encodeData, type)
-    decode(buffer)
-}
 
 module.exports = io => {
     io.on('connection', socket => {
@@ -12,24 +9,42 @@ module.exports = io => {
             const { Base64, name, type, classId, authId } = data
             pathName = `./dataSet/${name}`
             decodeType = type.split(";").pop()
-            decodeBase64Image(Base64,decodeType, decode => {
-                // here code to send base64 to server
-                // options = {
-                //     method:req.method,
-                //     uri:`${url}/predict`,
-                //     form:{
-                //         model_id:id,
-                //         buffer:decode
-                //     }
-                // }
-                // request(options).then(v => {
-                //     res.status(200).json(v)
-                // }).catch(err => {
-                //     console.error(err)
-                //     res.status(400).json(err)
-                // })
-                // end code
-                // fs.writeFileSync(pathName, decode);
+            options = {
+                method:"POST",
+                uri:`http://127.0.0.1:5000/predict`,
+                form:{
+                   model_id:classId,
+                   base64:Base64
+               }
+           }
+           request(options).then(v => {
+               console.log('====================================');
+               console.log(v);
+               console.log('====================================');
+           })
+        })
+        socket.on('load-model',(data) => {
+            options = {
+                method:"POST",
+                uri:`http://127.0.0.1:5000/model/redis`,
+                form:{
+                    model_id:data.classId
+                }
+            }
+            request(options).then(v => {
+                console.log(v);
+            })
+        })
+        socket.on('del-model',data => {
+            options = {
+                method:"DELETE",
+                uri:`http://127.0.0.1:5000/model/redis`,
+                form:{
+                    model_id:data.classId
+                }
+            }
+            request(options).then(v => {
+                console.log(v);
             })
         })
     })

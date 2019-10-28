@@ -1,15 +1,16 @@
 const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 
-const CourseSchema = new Schema({
-    semesterId:{
+const CheckInSchema = new Schema({
+    classId:{
         type:Schema.Types.ObjectId,
         required:true
     },
-    name: {
-        type:String,
+    studentList:{
+        type:[Schema.Types.ObjectId],
         required:true
     }
+
 },{ timestamps: true, versionKey: false })
-const Course = mongoose.model('course',CourseSchema)
-module.exports = Course
+const CheckIn = mongoose.model('checkIn',CheckInSchema)
+module.exports = CheckIn

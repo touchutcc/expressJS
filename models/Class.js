@@ -6,6 +6,18 @@ const ClassSchema = new Schema({
         type:Schema.Types.ObjectId,
         required:true
     },
+    group:{
+        type:String,
+        required:true
+    },
+    location:{
+        type:String,
+        required:true
+    },
+    day:{
+        type:String,
+        required:true
+    },
     startTime: {
         type:Date,
         required: true
@@ -18,7 +30,7 @@ const ClassSchema = new Schema({
         type:[Schema.Types.ObjectId],
         required:false
     }
-    
+
 },{ timestamps: true, versionKey: false })
 const Class = mongoose.model('class',ClassSchema)
 module.exports = Class

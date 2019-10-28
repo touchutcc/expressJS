@@ -30,6 +30,8 @@ mongoose.connect(url, options).then(() => {
   require('./models/Student')
   require('./models/Course')
   require('./models/Class')
+  require('./models/Semester')
+  require('./models/CheckIn')
   // require passport middleware
   app.use(passport.initialize())
   require('./middleware/passport')(passport)
@@ -45,11 +47,13 @@ mongoose.connect(url, options).then(() => {
   const student = require('./routes/student')
   const course = require('./routes/course')
   const classU = require('./routes/class')
+  const semester = require('./routes/semester')
   const PythonConnector = require('./routes/PythonConnector')
   require('./routes/socket')(io)
   
   // use module
   app.use('/auth', auth) //auth/login
+  app.use('/semester',passportAuth,tokenToReq,semester)
   app.use('/cour', passportAuth, tokenToReq, course)
   app.use('/stu', student)
   app.use('/clas', classU)
