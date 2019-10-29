@@ -6,25 +6,19 @@ const courseValidator = require('../modules/courseValidator')
 
 router.post('/', (req, res, next) => {
     // standard info
-    const { name, group, location, startTime, endTime, studentList } = req.body
+    const { name, semesterId } = req.body
     const { errors, isValid } = courseValidator(req.body)
     console.log(errors, isValid);
     if (!isValid) return res.status(400).json(errors)
     Course.findOne({ name: name, group: group }).then(cour => {
         if (cour) {
             return res.status(400).json({
-                name: 'Name already exists',
-                group: 'Group already exists'
+                name: 'Name already exists'
             })
         } else {
             const newCourse = new Course({
-                userId: req.uid,
+                semesterId: semesterId,
                 name: name,
-                group: group,
-                location: location,
-                startTime: Date.now(), // startTime todo
-                endTime: Date.now(), // endTime todo
-                studentList: studentList
             })
             newCourse.save().then(cour => {
                 res.json({
@@ -39,19 +33,19 @@ router.post('/', (req, res, next) => {
     })
 })
 
-router.put('/:_id', (req, res, next) => {
-    const { _id } = req.params
-    const { name, group, location, startTime, endTime, studentList } = req.body
-    Course.updateOne({ _id: _id }, {name: name, group: group, location: location, startTime: Date.now(), endTime: Date.now(), studentList: studentList }).then(cour => {
-        return res.status(200).json(cour)
-    }).catch(err => {
-        console.error(err)
-    })
-})
+// router.put('/:_id', (req, res, next) => {
+//     const { _id } = req.params
+//     const { name, group, location, startTime, endTime, studentList } = req.body
+//     Course.updateOne({ _id: _id }, {name: name, group: group, location: location, startTime: Date.now(), endTime: Date.now(), studentList: studentList }).then(cour => {
+//         return res.status(200).json(cour)
+//     }).catch(err => {
+//         console.error(err)
+//     })
+// })
 
-router.get('/', (req, res, next) => { // get All
-    const userObjectId = req.uid
-    Course.find({ userId: userObjectId }).then(courList => {
+router.get('/:_id', (req, res, next) => { // get All
+    const { _id } = req.params
+    Course.find({ semesterId: _id }).then(courList => {
         res.status(200).json(courList)
     }).catch(err => {
         console.error(err);
