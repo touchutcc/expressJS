@@ -10,7 +10,7 @@ router.post('/', (req, res, next) => {
     const { errors, isValid } = courseValidator(req.body)
     console.log(errors, isValid);
     if (!isValid) return res.status(400).json(errors)
-    Course.findOne({ name: name, group: group }).then(cour => {
+    Course.findOne({ name: name, semesterId: semesterId }).then(cour => {
         if (cour) {
             return res.status(400).json({
                 name: 'Name already exists'
