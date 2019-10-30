@@ -19,7 +19,7 @@ router.post('/', (req, res, next) => {
             data: Semest
         })
     }).catch(err => {
-        console.error(err)
+        return res.status(500).json({err:err});
     })
     //const { errors, isValid } = semesterValidator(req.body);
     //if (!isValid) return res.status(400).json(errors)
@@ -53,7 +53,7 @@ router.post('/', (req, res, next) => {
      Semester.updateOne({ _id: _id }, {name: name, startDate: startDate, endDate: endDate }).then(cour => {
          return res.status(200).json(cour)
      }).catch(err => {
-         console.error(err)
+        return res.status(500).json({err:err});
      })
  })
 
@@ -65,7 +65,7 @@ router.get('/', (req, res, next) => { // get All
     Semester.find({ userId: userObjectId }).then(semesterList => {
         res.status(200).json(semesterList)
     }).catch(err => {
-        console.error(err);
+        return res.status(500).json({err:err});
     })
 })
 
@@ -74,7 +74,7 @@ router.delete('/:_id', (req, res, next) => {
     Semester.deleteOne({ _id: _id }).then(cour => {
         return res.status(200).json(cour)
     }).catch(err => {
-        console.error(err)
+        return res.status(500).json({err:err});
     })
 })
 

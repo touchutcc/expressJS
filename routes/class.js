@@ -40,7 +40,7 @@ router.post('/:_id', (req, res, next) => {
                     data: clas
                 })
             }).catch(err => {
-                console.error(err);
+                return res.status(500).json({err:err});
             })
         }
     })
@@ -54,7 +54,7 @@ router.put('/:_id', (req, res, next) => {
     }).then(clas => {
         return res.status(200).json(clas)
     }).catch(err => {
-        console.error(err)
+        return res.status(500).json({err:err});
     })
 })
 
@@ -65,7 +65,7 @@ router.get('/', (req, res, next) => {
     }).then(courList => {
         res.status(200).json(courList)
     }).catch(err => {
-        console.error(err)
+        return res.status(500).json({err:err});
     })
 })
 
@@ -79,7 +79,7 @@ router.delete('/:_id', (req, res, next) => {
         //delete dataSet folder
         return res.status(200).json(clas)
     }).catch(err => {
-        console.error(err)
+        return res.status(500).json({err:err});
     })
 })
 
