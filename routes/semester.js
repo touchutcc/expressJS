@@ -71,7 +71,7 @@ router.get('/', (req, res, next) => { // get All
 
 router.delete('/:_id', (req, res, next) => {
     const { _id } = req.params
-    Course.deleteOne({ _id: _id }).then(cour => {
+    Semester.deleteOne({ _id: _id }).then(cour => {
         return res.status(200).json(cour)
     }).catch(err => {
         console.error(err)
