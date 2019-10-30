@@ -4,20 +4,24 @@ const mongoose = require('mongoose')
 const Course = mongoose.model('course')
 const courseValidator = require('../modules/courseValidator')
 
-router.post('/', (req, res, next) => {
+router.post('/:_id', (req, res, next) => {
     // standard info
-    const { name, semesterId } = req.body
-    const { errors, isValid } = courseValidator(req.body)
-    console.log(errors, isValid);
-    if (!isValid) return res.status(400).json(errors)
-    Course.findOne({ name: name, semesterId: semesterId }).then(cour => {
+    const { name } = req.body
+
+    const { _id } = req.params
+    console.log(_id);
+
+    // const { errors, isValid } = courseValidator(req.body)
+    // console.log(errors, isValid);
+    // if (!isValid) return res.status(400).json(errors)
+    Course.findOne({ name: name, semesterId: _id }).then(cour => {
         if (cour) {
             return res.status(400).json({
                 name: 'Name already exists'
             })
         } else {
             const newCourse = new Course({
-                semesterId: semesterId,
+                semesterId: _id,
                 name: name,
             })
             newCourse.save().then(cour => {
