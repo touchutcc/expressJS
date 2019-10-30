@@ -6,13 +6,17 @@ const StudentSchema = new Schema({
         type: String,
         required: true
     },
+    userId:{
+        type:Schema.Types.ObjectId,
+        required: true
+    },
     name: {
         type: String,
         required: true
     },
     lastname: {
         type:String,
-        required:true
+        required: true
     },
     line_id: {
         type: String,
