@@ -4,33 +4,43 @@ const mongoose = require('mongoose')
 const Class = mongoose.model('class')
 const classValidator = require('../modules/classValidator')
 
-
 router.post('/', (req, res, next) => {
     // standard info
-    const {
-        courseId,
+    const { courseId,
+        group,
+        location,
+        day,
         startTime,
         endTime,
-        studentList
-    } = req.body
-    const {
-        errors,
-        isValid
-    } = classValidator(req.body)
+        studentList } = req.body
+    const { errors, isValid } = courseValidator(req.body)
+    console.log(errors, isValid);
     if (!isValid) return res.status(400).json(errors)
-    const newClass = new Class({
-        courseId: courseId,
-        startTime: Date.now(),
-        endTime: Date.now(),
-        studentList: studentList
-    })
-    newClass.save().then(clas => {
-        res.json({
-            ok: true,
-            data: clas
-        })
-    }).catch(err => {
-        console.error(err)
+    Class.findOne({ courseId: courseId, name: name }).then(clas => {
+        if (clas) {
+            return res.status(400).json({
+                name: 'Name already exists'
+            })
+        } else {
+            const newClass = new Class({
+                courseId: courseId,
+                group: group,
+                location: location,
+                day: day,
+                startTime: Date.now(),
+                endTime: Date.now(),
+                studentList: studentList
+            })
+            newClass.save().then(clas => {
+                res.json({
+                    ok: true,
+                    data: clas
+                })
+            }).catch(err => {
+                console.error(err);
+
+            })
+        }
     })
 })
 
