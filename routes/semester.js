@@ -33,44 +33,35 @@ router.post('/', (req, res, next) => {
     })
 })
 
-// router.put('/:_id', (req, res, next) => {
-//     const { _id } = req.params
-//     const { name, startDate, endDate } = req.body
-//     Semester.updateOne({ _id: _id }, {name: name, startDate: startDate, endDate: endDate }).then(cour => {
-//         return res.status(200).json(cour)
-//     }).catch(err => {
-//         console.error(err)
-//     })
-// })
+ router.put('/:_id', (req, res, next) => {
+     const { _id } = req.params
+     const { name, startDate, endDate } = req.body
+     Semester.updateOne({ _id: _id }, {name: name, startDate: startDate, endDate: endDate }).then(cour => {
+         return res.status(200).json(cour)
+     }).catch(err => {
+         console.error(err)
+     })
+ })
 
-router.get('/:_id', (req, res, next) => {
-    const { _id } = req.params
-    Semester.find({ semesterId: _id }).then(Semest => {
-        res.status(200).json(Semest)
-        }).catch(err => {
-            console.error(err);
+router.get('/', (req, res, next) => { // get All
+    const userObjectId = req.uid
+    console.log('====================================');
+    console.log(userObjectId);
+    console.log('====================================');
+    Semester.find({ userId: userObjectId }).then(semesterList => {
+        res.status(200).json(semesterList)
+    }).catch(err => {
+        console.error(err);
     })
 })
 
-// router.get('/', (req, res, next) => { // get All
-//     const userObjectId = req.uid
-//     console.log('====================================');
-//     console.log(userObjectId);
-//     console.log('====================================');
-//     Semester.find({ userId: userObjectId }).then(semesterList => {
-//         res.status(200).json(semesterList)
-//     }).catch(err => {
-//         console.error(err);
-//     })
-// })
-
-// router.delete('/:_id', (req, res, next) => {
-//     const { _id } = req.params
-//     Course.deleteOne({ _id: _id }).then(cour => {
-//         return res.status(200).json(cour)
-//     }).catch(err => {
-//         console.error(err)
-//     })
-// })
+router.delete('/:_id', (req, res, next) => {
+    const { _id } = req.params
+    Course.deleteOne({ _id: _id }).then(cour => {
+        return res.status(200).json(cour)
+    }).catch(err => {
+        console.error(err)
+    })
+})
 
 module.exports = router;
