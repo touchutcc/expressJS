@@ -30,7 +30,7 @@ router.post('/:_id', (req, res, next) => {
                     data: cour
                 })
             }).catch(err => {
-                console.error(err);
+                return res.status(500).json({err:err});
 
             })
         }
@@ -52,7 +52,7 @@ router.get('/:_id', (req, res, next) => { // get All
     Course.find({ semesterId: _id }).then(courList => {
         res.status(200).json(courList)
     }).catch(err => {
-        console.error(err);
+        return res.status(500).json({err:err});
     })
 })
 
@@ -61,7 +61,7 @@ router.delete('/:_id', (req, res, next) => {
     Course.deleteOne({ _id: _id }).then(cour => {
         return res.status(200).json(cour)
     }).catch(err => {
-        console.error(err)
+        return res.status(500).json({err:err});
     })
 })
 
