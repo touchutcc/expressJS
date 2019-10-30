@@ -7,8 +7,9 @@ module.exports = io => {
         console.log('Connected socketIO');
         socket.on('sendphoto', data => {
             const { Base64, name, type, classId, authId } = data
-            pathName = `./dataSet/${name}`
             decodeType = type.split(";").pop()
+            console.log(name);
+            
             options = {
                 method:"POST",
                 uri:`http://127.0.0.1:5000/predict`,
