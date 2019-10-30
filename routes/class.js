@@ -16,7 +16,7 @@ router.post('/', (req, res, next) => {
     const { errors, isValid } = classValidator(req.body)
     console.log(errors, isValid);
     if (!isValid) return res.status(400).json(errors)
-    Class.findOne({ courseId: courseId, name: name }).then(clas => {
+    Class.findOne({ name: name }).then(clas => {
         if (clas) {
             return res.status(400).json({
                 name: 'Name already exists'
