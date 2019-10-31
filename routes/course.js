@@ -4,13 +4,9 @@ const mongoose = require('mongoose')
 const Course = mongoose.model('course')
 const courseValidator = require('../modules/courseValidator')
 
-router.post('/:_id', (req, res, next) => {
+router.post('/', (req, res, next) => {
     // standard info
-    const { name } = req.body
-
-    const { _id } = req.params
-    console.log(_id);
-
+    const { _id,name } = req.body
     // const { errors, isValid } = courseValidator(req.body)
     // console.log(errors, isValid);
     // if (!isValid) return res.status(400).json(errors)
