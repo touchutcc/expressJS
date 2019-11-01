@@ -52,10 +52,38 @@ router.get('/:_id', (req, res, next) => { // get All
     })
 })
 
+// router.delete('/:_id', (req, res, next) => {
+//     const { _id } = req.params
+//     Course.deleteOne({ _id: _id }).then(cour => {
+//         return res.status(200).json(cour)
+//     }).catch(err => {
+//         return res.status(500).json({err:err});
+//     })
+// })
+
 router.delete('/:_id', (req, res, next) => {
     const { _id } = req.params
     Course.deleteOne({ _id: _id }).then(cour => {
-        return res.status(200).json(cour)
+        Class.find({courseId:couseList}).then(clas => {
+            if(!clas)
+                return res.status(200).json(cour)
+            else 
+            Class.deleteMany({courseId:couseList}).then(classOk => {
+                const classList = []
+                clas.map(v => classList.push(v._id))
+                            CheckIn.find({classId:classList}).then(check => {
+                                if(!check)
+                                    return res.status(200).json(check)
+                                else
+                                CheckIn.deleteMany({classId:classList}).then(checkOk => {
+                                    res.status(200).json(checkOk)
+                                })
+                            })
+                        })
+                    })
+                
+        
+        //return res.status(200).json(cour)
     }).catch(err => {
         return res.status(500).json({err:err});
     })

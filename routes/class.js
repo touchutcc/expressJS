@@ -66,15 +66,41 @@ router.get('/by/:_id', (req, res, next) => {
     })
 })
 
+// router.delete('/:_id', (req, res, next) => {
+//     const {
+//         _id
+//     } = req.params
+//     Class.deleteOne({
+//         _id: _id
+//     }).then(clas => {
+//         //delete dataSet folder
+//         return res.status(200).json(clas)
+//     }).catch(err => {
+//         return res.status(500).json({err:err});
+//     })
+// })
+
 router.delete('/:_id', (req, res, next) => {
-    const {
-        _id
-    } = req.params
-    Class.deleteOne({
-        _id: _d
-    }).then(clas => {
-        //delete dataSet folder
-        return res.status(200).json(clas)
+    const { _id } = req.params
+    Class.deleteOne({ _id: _id }).then(clas => {
+        CheckIn.find({classId:classList}).then(check => {
+            if(!check)
+                return res.status(200).json(clas)
+            else
+            CheckIn.deleteMany({classId:classList}).then(checkOk => {
+                res.status(200).json(checkOk)
+                    Class.find({courseId:couseList}).then(clas => {
+                        if(!clas)
+                            return res.status(200).json(clas)
+                        else 
+                        Class.deleteMany({courseId:couseList}).then(classOk => {
+                            const classList = []
+                            clas.map(v => classList.push(v._id))
+                        })
+                    })
+                })
+        })
+        //return res.status(200).json(cour)
     }).catch(err => {
         return res.status(500).json({err:err});
     })
