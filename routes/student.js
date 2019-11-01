@@ -52,7 +52,6 @@ router.post('/data_set/video',(req,res,next) => {
     })
 })
 // =======================================================
-
 router.post('/', (req, res, next) => {
     // standard info
     const { stuId, name, lastname, line_id } = req.body
