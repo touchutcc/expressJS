@@ -48,15 +48,16 @@ mongoose.connect(url, options).then(() => {
   const course = require('./routes/course')
   const classU = require('./routes/class')
   const semester = require('./routes/semester')
+  const options = require('./routes/options')
   const PythonConnector = require('./routes/PythonConnector')
   require('./routes/socket')(io)
-  
   // use module
   app.use('/auth', auth) //auth/login
   app.use('/semester',passportAuth,tokenToReq,semester)
   app.use('/cour', passportAuth, tokenToReq, course)
   app.use('/stu', student)
   app.use('/clas', passportAuth, tokenToReq, classU)
+  app.use('/opt', passportAuth, tokenToReq, options)
   app.use('/deep_server',passportAuth,tokenToReq,PythonConnector)
 }).catch(err => {
   console.error(err);
