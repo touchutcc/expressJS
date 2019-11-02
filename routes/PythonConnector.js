@@ -23,29 +23,11 @@ router.post('/model',(req,res) => {
         res.status(400).json(err)
     })
 })
-// router.post('/predict/:id',(req,res) => {
-//     const {id} = req.params
-//     const {base64} = req.body
-//     options = {
-//         method:req.method,
-//         uri:`${url}/predict`,
-//         form:{
-//             data:id,
-//             base64:base64
-//         }
-//     }
-//     request(options).then(v => {
-//         res.status(200).json(v)
-//     }).catch(err => {
-//         console.error(err)
-//         res.status(400).json(err)
-//     })
-// })
-router.post('/redis/:id',(req,res) => {
+router.get('/model/:id',(req,res) => {
     const {id} = req.params
     options = {
         method:req.method,
-        uri:`${url}/model/redis`,
+        uri:`${url}/model`,
         form:{
             model_id:id
         }
@@ -57,11 +39,11 @@ router.post('/redis/:id',(req,res) => {
         res.status(400).json(err)
     })
 })
-router.delete('/redis/;id',(req,res) => {
+router.delete('/model/:id',(req,res) => {
     const {id} = req.params
     options = {
         method:req.method,
-        uri:`${url}/model/redis`,
+        uri:`${url}/model`,
         form:{
             model_id:id
         }
