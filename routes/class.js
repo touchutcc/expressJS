@@ -63,17 +63,23 @@ router.get('/:_id', (req, res, next) => {
         return res.status(500).json({ err: err });
     })
 })
-router.put('/stu/:_id',(req,res) => {
-    const {_id} = req.params
+router.put('/stu/:_id', (req, res) => {
+    const { _id } = req.params
     const { stuList } = req.body
-    Class.update({_id:_id},{ $push: { studentList: { $each: stuList } } }).then(classStuOk => {
+    Class.update({ _id: _id }, { $push: { studentList: { $each: stuList } } }).then(classStuOk => {
+        res.status(200).json(classStuOk)
+    })
+})
+router.put('/stu/:_id/:_stu', (req, res) => {
+    const { _id, _stu } = req.params
+    Class.update({ _id: _id }, { $pull: { studentList: _stu } }).then(classStuOk => {
         res.status(200).json(classStuOk)
     })
 })
 router.delete('/:_id', (req, res, next) => {
-    const {_id} = req.params
-    Class.deleteOne({_id: _id}).then(clasOk => {
-        CheckIn.deleteMany({classId:_id}).then(checkInOk => {
+    const { _id } = req.params
+    Class.deleteOne({ _id: _id }).then(clasOk => {
+        CheckIn.deleteMany({ classId: _id }).then(checkInOk => {
             return res.status(200).json(checkInOk)
         })
     }).catch(err => {
