@@ -53,12 +53,12 @@ mongoose.connect(url, options).then(() => {
   require('./routes/socket')(io)
   // use module
   app.use('/auth', auth) //auth/login
-  app.use('/semester',passportAuth,tokenToReq,semester)
+  app.use('/semester', passportAuth, tokenToReq, semester)
   app.use('/cour', passportAuth, tokenToReq, course)
-  app.use('/stu', student)
+  app.use('/stu', passportAuth, tokenToReq, student)
   app.use('/clas', passportAuth, tokenToReq, classU)
   app.use('/opt', passportAuth, tokenToReq, options)
-  app.use('/deep_server',passportAuth,tokenToReq,PythonConnector)
+  app.use('/deep_server', passportAuth, tokenToReq, PythonConnector)
 }).catch(err => {
   console.error(err);
   process.exit()

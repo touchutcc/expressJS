@@ -63,7 +63,13 @@ router.get('/:_id', (req, res, next) => {
         return res.status(500).json({ err: err });
     })
 })
-
+router.put('/stu/:_id',(req,res) => {
+    const {_id} = req.params
+    const { stuList } = req.body
+    Class.update({_id:_id},{ $push: { studentList: { $each: stuList } } }).then(classStuOk => {
+        res.status(200).json(classStuOk)
+    })
+})
 router.delete('/:_id', (req, res, next) => {
     const {_id} = req.params
     Class.deleteOne({_id: _id}).then(clasOk => {

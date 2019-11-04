@@ -14,13 +14,13 @@ const StudentSchema = new Schema({
         type: String,
         required: true
     },
-    lastname: {
+    faculty: {
         type:String,
-        required: true
+        required:false
     },
-    line_id: {
-        type: String,
-        required: false
+    major:{
+        type:String,
+        required:false
     }
 }, { timestamps: true, versionKey: false })
 const Student = mongoose.model('student', StudentSchema)

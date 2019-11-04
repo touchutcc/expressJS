@@ -53,33 +53,30 @@ router.post('/data_set/video',(req,res,next) => {
 })
 // =======================================================
 router.post('/', (req, res, next) => {
-    // standard info
-    const { stuId, name, lastname, line_id } = req.body
-    const { errors, isValid } = studentValidator(req.body)
-    if (!isValid) return res.status(400).json(errors)
-
+    const { stuId, name } = req.body
+    const userObjId = req.uid
     Student.findOne({ stuId: stuId }).then(stu => {
         if (stu)
             return res.status(400).json({ stuId: 'Student ID already exists' })
         else {
             const newStudent = new Student({
                 stuId: stuId,
-                name: name,
-                lastname: lastname,
-                line_id: line_id
+                userId:userObjId,
+                name: name
             })
             newStudent.save().then(stu => {
-                uploadFile(req.files, stu, (file, err) => {
-                    if (err) return res.status(500).json(err)
-                    deleteUploadFile(file, err => {
-                        if (err) return res.status(500).json(err)
-                        // face Detection
-                        res.json({
-                            ok: true,
-                            data: stu
-                        })
-                    })
-                })
+                res.json(stu)
+                // uploadFile(req.files, stu, (file, err) => {
+                //     if (err) return res.status(500).json(err)
+                //     deleteUploadFile(file, err => {
+                //         if (err) return res.status(500).json(err)
+                //         // face Detection
+                //         res.json({
+                //             ok: true,
+                //             data: stu
+                //         })
+                //     })
+                // })
             })
         }
     })
