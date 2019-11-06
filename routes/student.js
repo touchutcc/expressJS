@@ -53,7 +53,7 @@ router.post('/data_set/video',(req,res,next) => {
 })
 // =======================================================
 router.post('/', (req, res, next) => {
-    const { stuId, name } = req.body
+    const { stuId, name,major,faculty } = req.body
     const userObjId = req.uid
     Student.findOne({ stuId: stuId }).then(stu => {
         if (stu)
@@ -62,7 +62,9 @@ router.post('/', (req, res, next) => {
             const newStudent = new Student({
                 stuId: stuId,
                 userId:userObjId,
-                name: name
+                name: name,
+                major:major,
+                faculty:faculty
             })
             newStudent.save().then(stu => {
                 res.json(stu)

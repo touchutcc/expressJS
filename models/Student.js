@@ -16,11 +16,11 @@ const StudentSchema = new Schema({
     },
     faculty: {
         type:String,
-        required:false
+        required:true
     },
     major:{
         type:String,
-        required:false
+        required:true
     }
 }, { timestamps: true, versionKey: false })
 const Student = mongoose.model('student', StudentSchema)
