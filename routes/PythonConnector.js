@@ -1,6 +1,8 @@
 const express = require('express')
 const router = express.Router()
 const request = require('request-promise')
+const mongoose = require('mongoose')
+const CheckIn = mongoose.model('checkIn')
 
 const url = "http://127.0.0.1:5000"
 
@@ -16,9 +18,9 @@ router.post('/model', (req, res) => {
     request(options).then(v => {
         res.status(200).json(JSON.parse(v))
     })
-    .catch(err => {
-        console.error(err)
-    })
+        .catch(err => {
+            console.error(err)
+        })
 })
 router.delete('/model/pop/:id', (req, res) => {
     const { id } = req.params
@@ -47,7 +49,14 @@ router.get('/model/:id', (req, res) => {
         }
     }
     request(options).then(v => {
-        res.status(200).json(JSON.parse(v))
+        const newCheckIn = new CheckIn({
+            classId: id
+        })
+        newCheckIn.save().then(checkInRes => {
+            withCheckIn = JSON.parse(v)
+            withCheckIn['checkIn'] = checkInRes
+            res.status(200).json(withCheckIn)
+        })
     }).catch(err => {
         res.status(404).json(JSON.parse(err.response.body))
     })

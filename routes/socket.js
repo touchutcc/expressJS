@@ -1,28 +1,38 @@
 const fs = require('fs')
-const {pythonServer} = require('../config')
+const { pythonServer } = require('../config')
 const request = require('request-promise')
 const mongoose = require('mongoose')
-const Schema = mongoose.Schema
+const CheckIn = mongoose.model('checkIn')
 
 module.exports = io => {
     io.on('connection', socket => {
         console.log('Connected socketIO');
         socket.on('predict', data => {
-            const { Base64, name, type, classId, authId } = data
+            const { Base64, name, type, classId, authId, checkId } = data
+            console.log(checkId);
+
             decodeType = type.split(";").pop()
             options = {
-                method:"POST",
-                uri:`http://127.0.0.1:5000/predict`,
-                form:{
-                   _uid:authId,
-                   base64:Base64
-               }
-           }
-           request(options).then(v => {
-               console.log(v);
-               
-               //socket.emit('predicted',v)
-           })
+                method: "POST",
+                uri: `http://127.0.0.1:5000/predict`,
+                form: {
+                    _uid: authId,
+                    base64: Base64
+                }
+            }
+            request(options).then(v => {
+                v = JSON.parse(v);
+                if (v.ok) {
+                    CheckIn.findById(checkId).then(checkList => {
+                        if (checkList.studentList.filter(i => i._id == v.predicted).length == 0) {
+                            newCheckIn = { _id: v.predicted, time: new Date() }
+                            CheckIn.update({ _id: checkId }, { $push: { studentList: newCheckIn } }).then(checkInCheck => {
+                                socket.emit('predicted', newCheckIn)
+                            })
+                        }
+                    })
+                }
+            })
         })
     })
     setInterval(() => {

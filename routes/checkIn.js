@@ -7,10 +7,10 @@ router.post('/', (req, res, next) => {
     const { classId } = req.body
     const newCheckIn = new CheckIn({
             classId: classId,
-            studentList: {
-                _id:"testObjId",
-                time:new Date()
-                }
+            // studentList: {
+            //     _id:"testObjId",
+            //     time:new Date()
+            //     }
             })
             newCheckIn.save().then(check => {
                 res.json(check)
