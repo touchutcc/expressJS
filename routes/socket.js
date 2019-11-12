@@ -12,12 +12,14 @@ module.exports = io => {
                 method:"POST",
                 uri:`http://127.0.0.1:5000/predict`,
                 form:{
-                   model_id:classId,
+                   _uid:authId,
                    base64:Base64
                }
            }
            request(options).then(v => {
-               socket.emit('predicted',v)
+               console.log(v);
+               
+               //socket.emit('predicted',v)
            })
         })
     })
