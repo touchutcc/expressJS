@@ -38,7 +38,8 @@ router.post('/', (req, res, next) => {
 // })
 
 router.put('/pull', (req, res, next) => {
-    CheckIn.findById('5dca4d86cebe0a056887b137').then(checkList => {
+    const { _id } = req.params
+        CheckIn.findById( _id ).then(checkList => {
         if(checkList.studentList.filter(i => i._id == "testObjId") == []){
             console.log("have");
         }else{
