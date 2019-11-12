@@ -49,6 +49,7 @@ mongoose.connect(url, options).then(() => {
   const classU = require('./routes/class')
   const semester = require('./routes/semester')
   const options = require('./routes/options')
+  const checkIn = require('./routes/checkIn')
   const PythonConnector = require('./routes/PythonConnector')
   require('./routes/socket')(io)
   // use module
@@ -58,6 +59,7 @@ mongoose.connect(url, options).then(() => {
   app.use('/stu', passportAuth, tokenToReq, student)
   app.use('/clas', passportAuth, tokenToReq, classU)
   app.use('/opt', passportAuth, tokenToReq, options)
+  app.use('/checkIn', passportAuth, tokenToReq, checkIn)
   app.use('/deep_server', passportAuth, tokenToReq, PythonConnector)
 }).catch(err => {
   console.error(err);

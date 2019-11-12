@@ -1,6 +1,8 @@
 const fs = require('fs')
 const {pythonServer} = require('../config')
 const request = require('request-promise')
+const mongoose = require('mongoose')
+const Schema = mongoose.Schema
 
 module.exports = io => {
     io.on('connection', socket => {
@@ -29,3 +31,13 @@ module.exports = io => {
         io.emit('ping', { data: nowDate })
     }, 2000)
 }
+
+
+// router.put('/pull', (req, res, next) => {
+//     const { _id } = req.params
+//             CheckIn.updateOne( _id ).then(check => {
+//                 return res.status(200).json(check)
+//             }).catch(err => {
+//                 return res.status(500).json({ err: err });
+//             })
+// })

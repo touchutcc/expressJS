@@ -7,8 +7,8 @@ const CheckInSchema = new Schema({
         required:true
     },
     studentList:{
-        type:[Schema.Types.ObjectId],
-        required:true
+        type:[Object],
+        required:false
     }
 },{ timestamps: true, versionKey: false })
 const CheckIn = mongoose.model('checkIn',CheckInSchema)
