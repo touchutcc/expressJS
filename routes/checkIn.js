@@ -19,35 +19,26 @@ router.post('/', (req, res, next) => {
             })
 })
 
-// router.get('/:_id', (req, res, next) => {
-//     const { _id } = req.params
-//     CheckIn.find({ classId: _id, studentList: _id }).then(checkList => {
-//         res.status(200).json(checkList)
-//     }).catch(err => {
-//         return res.status(500).json({ err: err });
-//     })
-// })
-
 // router.put('/pull', (req, res, next) => {
 //     const { _id } = req.params
-//     CheckIn.find({ classId: _id, studentList: _id }).then(checkList => {
-//         res.status(200).json(checkList)
+//         CheckIn.findById( _id ).then(checkList => {
+//          if(checkList.studentList.filter(i => i._id == "testObjId") == []){
+//              console.log("have");
+//          }else{
+//              console.log("else");   
+//          }
 //     }).catch(err => {
-//         return res.status(500).json({ err: err });
+//         console.error(err);
 //     })
 // })
 
 router.put('/pull', (req, res, next) => {
     const { _id } = req.params
-        CheckIn.findById( _id ).then(checkList => {
-        if(checkList.studentList.filter(i => i._id == "testObjId") == []){
-            console.log("have");
-        }else{
-            console.log("else");   
-        }
-    }).catch(err => {
-        console.error(err);
-    })
+            CheckIn.updateOne( _id ).then(check => {
+                return res.status(200).json(check)
+            }).catch(err => {
+                return res.status(500).json({ err: err });
+            })
 })
 
 router.delete('/:_id', (req, res, next) => {

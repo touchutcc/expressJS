@@ -1,6 +1,8 @@
 const fs = require('fs')
 const {pythonServer} = require('../config')
 const request = require('request-promise')
+const mongoose = require('mongoose')
+const Schema = mongoose.Schema
 
 module.exports = io => {
     io.on('connection', socket => {
@@ -27,3 +29,17 @@ module.exports = io => {
         io.emit('ping', { data: nowDate })
     }, 2000)
 }
+
+
+// router.put('/pull', (req, res, next) => {
+//     const { _id } = req.params
+//         CheckIn.findById( _id ).then(checkList => {
+//          if(checkList.studentList.filter(i => i._id == "testObjId") == []){
+//              console.log("have");
+//          }else{
+//              console.log("else");   
+//          }
+//     }).catch(err => {
+//         console.error(err);
+//     })
+// })
