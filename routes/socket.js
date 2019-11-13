@@ -25,7 +25,7 @@ module.exports = io => {
                 if (v.ok) {
                     CheckIn.findById(checkId).then(checkList => {
                         if (checkList.studentList.filter(i => i._id == v.predicted).length == 0) {
-                            newCheckIn = { _id: v.predicted, time: new Date() }
+                            newCheckIn = { _id: v.predicted, time: new Date(),type:'face'}
                             CheckIn.update({ _id: checkId }, { $push: { studentList: newCheckIn } }).then(checkInCheck => {
                                 socket.emit('predicted', newCheckIn)
                             })

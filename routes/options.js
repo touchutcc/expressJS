@@ -36,6 +36,9 @@ router.get('/', (req, res) => {
                                 const classId = []
                                 classList.map(v => classId.push(v._id))
                                 CheckIn.find({classId:{$in:classId}}).then(checkInList => {
+                                    console.log('====================================');
+                                    console.log(checkInList);
+                                    console.log('====================================');
                                     ObjectRes.checkIn = checkInList
                                     return res.status(200).json(ObjectRes)
                                 })
