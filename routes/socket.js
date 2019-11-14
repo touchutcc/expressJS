@@ -24,12 +24,14 @@ module.exports = io => {
                 v = JSON.parse(v);
                 if (v.ok) {
                     CheckIn.findById(checkId).then(checkList => {
-                        if (checkList.studentList.filter(i => i._id == v.predicted).length == 0) {
-                            newCheckIn = { _id: v.predicted, time: new Date(),type:'face'}
-                            CheckIn.update({ _id: checkId }, { $push: { studentList: newCheckIn } }).then(checkInCheck => {
-                                socket.emit('predicted', newCheckIn)
-                            })
-                        }
+                        v.predicted.map(vm => {
+                            if (checkList.studentList.indexOf(vm) < 0) {
+                                newCheckIn = { _id: vm, time: new Date(), type: 'face' }
+                                CheckIn.update({ _id: checkId }, { $push: { studentList: vm } }).then(checkInCheck => {
+                                    socket.emit('predicted', newCheckIn)
+                                })
+                            }
+                        })
                     })
                 }
             })
@@ -41,13 +43,3 @@ module.exports = io => {
         io.emit('ping', { data: nowDate })
     }, 2000)
 }
-
-
-// router.put('/pull', (req, res, next) => {
-//     const { _id } = req.params
-//             CheckIn.updateOne( _id ).then(check => {
-//                 return res.status(200).json(check)
-//             }).catch(err => {
-//                 return res.status(500).json({ err: err });
-//             })
-// })
