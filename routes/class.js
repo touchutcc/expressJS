@@ -43,13 +43,9 @@ router.post('/', (req, res, next) => {
 
 router.put('/:_id', (req, res, next) => {
     const { _id } = req.params
-    const { studentList } = req.body
-    Class.updateOne({ _id: _id }, {
-        studentList: studentList
-    }).then(clas => {
-        return res.status(200).json(clas)
-    }).catch(err => {
-        return res.status(500).json({ err: err });
+    const data = req.body
+    Class.updateOne({_id:_id},data).then(classOk => {
+        res.status(200).json(classOk)
     })
 })
 

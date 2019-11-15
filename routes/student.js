@@ -55,33 +55,36 @@ router.post('/data_set/video',(req,res,next) => {
 router.post('/', (req, res, next) => {
     const { stuId, name,major,faculty } = req.body
     const userObjId = req.uid
-    Student.findOne({ stuId: stuId }).then(stu => {
-        if (stu)
-            return res.status(400).json({ stuId: 'Student ID already exists' })
-        else {
-            const newStudent = new Student({
-                stuId: stuId,
-                userId:userObjId,
-                name: name,
-                major:major,
-                faculty:faculty
-            })
-            newStudent.save().then(stu => {
-                res.json(stu)
-                // uploadFile(req.files, stu, (file, err) => {
-                //     if (err) return res.status(500).json(err)
-                //     deleteUploadFile(file, err => {
-                //         if (err) return res.status(500).json(err)
-                //         // face Detection
-                //         res.json({
-                //             ok: true,
-                //             data: stu
-                //         })
-                //     })
-                // })
-            })
-        }
-    })
+    console.log('====================================');
+    console.log(req.body);
+    console.log('====================================');
+    // Student.findOne({ stuId: stuId }).then(stu => {
+    //     if (stu)
+    //         return res.status(400).json({ stuId: 'Student ID already exists' })
+    //     else {
+    //         const newStudent = new Student({
+    //             stuId: stuId,
+    //             userId:userObjId,
+    //             name: name,
+    //             major:major,
+    //             faculty:faculty
+    //         })
+    //         newStudent.save().then(stu => {
+    //             res.json(stu)
+    //             // uploadFile(req.files, stu, (file, err) => {
+    //             //     if (err) return res.status(500).json(err)
+    //             //     deleteUploadFile(file, err => {
+    //             //         if (err) return res.status(500).json(err)
+    //             //         // face Detection
+    //             //         res.json({
+    //             //             ok: true,
+    //             //             data: stu
+    //             //         })
+    //             //     })
+    //             // })
+    //         })
+    //     }
+    // })
 })
 
 router.put('/:_id', (req, res, next) => {
