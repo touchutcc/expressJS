@@ -30,8 +30,8 @@ router.post('/', (req, res, next) => {
 
 router.put('/:_id', (req, res, next) => {
     const { _id } = req.params
-    const { name, group, location, startTime, endTime, studentList } = req.body
-    Course.updateOne({ _id: _id }, { name: name, group: group, location: location, startTime: Date.now(), endTime: Date.now(), studentList: studentList }).then(cour => {
+    const data = req.body
+    Course.updateOne({ _id: _id }, data).then(cour => {
         return res.status(200).json(cour)
     }).catch(err => {
         console.error(err)
