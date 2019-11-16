@@ -45,10 +45,6 @@ router.post('/', (req, res, next) => {
             })
             newStudent.save().then(stu => {
                 uploadFile(req.files.file, stu, (file, err) => {
-                    console.log('====================================');
-                    console.log(file);
-                    console.log('====================================');
-                    //if (err) return res.status(500).json(err)
                     res.json(stu)
                 })
             })
@@ -58,9 +54,17 @@ router.post('/', (req, res, next) => {
 
 router.put('/:_id', (req, res, next) => {
     const { _id } = req.params
-    const { line_id, name, lastname } = req.body
-    Student.updateOne({ _id: _id }, { name: name, lastname: lastname, line_id: line_id }).then(stu => {
-        return res.status(200).json(stu)
+    const data = req.body
+    Student.updateOne({ _id: _id }, data).then(stu => {
+        if (req.files != null) {
+            deleteUploadFile(`${_id}.mp4`, err => {
+                uploadFile(req.files.file, { _id: _id }, () => {
+                    return res.status(200).json(stu)
+                })
+            })
+        }else{
+            return res.status(200).json(stu)
+        }
     }).catch(err => {
         console.error(err)
     })
@@ -80,9 +84,6 @@ router.delete('/:_id', (req, res, next) => {
     const { _id } = req.params
     Student.deleteOne({ _id: _id }).then(stu => {
         deleteUploadFile(`${_id}.mp4`, err => {
-            console.log('====================================');
-            console.log(err);
-            console.log('====================================');
             return res.status(200).json(stu)
         })
     }).catch(err => {
