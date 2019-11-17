@@ -33,7 +33,7 @@ router.get('/', (req, res) => {
                                 ObjectRes.class = classList
                                 const classId = []
                                 classList.map(v => classId.push(v._id))
-                                CheckIn.find({classId:{$in:classId}}).then(checkInList => {
+                                CheckIn.find({ classId: { $in: classId } }).then(checkInList => {
                                     ObjectRes.checkIn = checkInList
                                     return res.status(200).json(ObjectRes)
                                 })
@@ -52,45 +52,36 @@ router.get('/', (req, res) => {
     })
 })
 
-router.delete('/', (req, res) => {
+router.delete('/', async (req, res) => {
     const userObjectId = req.uid
     const ObjectRes = {
         semester: [],
         course: [],
         class: [],
-        student: []
+        student: [],
+        checkIn: []
     }
-    Student.deleteMany({ userId: userObjectId }).then(studentOk => {
-        ObjectRes.student = studentOk
-        Semester.find({ userId: userObjectId }).then(semesterList => {
-            if (semesterList) {
-                Semester.deleteMany({ userId: userObjectId }).then(semesterOk => {
-                    //delete model check
-                    ObjectRes.semester = semesterOk
-                    const semesterId = []
-                    semesterList.map(v => semesterId.push(v._id))
-                    Course.find({ semesterId: { $in: semesterId } }).then(courseList => {
-                        if (courseList) {
-                            Course.deleteMany({ semesterId: { $in: semesterId } }).then(courseOk => {
-                                ObjectRes.course = courseOk
-                                const courseId = []
-                                courseList.map(v => courseId.push(v._id))
-                                Class.find({ courseId: { $in: courseId } }).then(classList => {
-                                    ObjectRes.class = classList
-                                    return res.status(200).json(ObjectRes)
-                                })
-                            })
-                        } else {
-                            return res.status(200).json(ObjectRes)
-                        }
-                    })
-                })
-            } else {
-                return res.status(200).json(ObjectRes)
+    ObjectRes.student = await Student.deleteMany({ userId: userObjectId })
+    const findSemester = await Semester.find({ userId: userObjectId })
+    if (findSemester) {
+        const semesterList = []
+        findSemester.map(i => semesterList.push(i._id))
+        ObjectRes.semester = await Semester.deleteMany({ userId: userObjectId })
+        const findCourse = await Course.find({ semesterId: { $in: semesterList } })
+        if (findCourse) {
+            const courseList = []
+            findCourse.map(i => courseList.push(i._id))
+            ObjectRes.course = await Course.deleteMany({ semesterId: { $in: semesterList } })
+            const findClass = await Class.find({ courseId: { $in: courseList } })
+            if (findClass) {
+                const classList = []
+                findClass.map(i => classList.push(i._id))
+                ObjectRes.class = await Class.deleteMany({ courseId: { $in: courseList } })
+                ObjectRes.checkIn = await CheckIn.deleteMany({ classId: { $in: classList } })
+                return res.status(200).json()
             }
-        })
-    }).catch(err => {
-        return res.status(500).json({ err: err });
-    })
+        }
+    }
+    return res.status(200).json(ObjectRes)
 })
 module.exports = router;
