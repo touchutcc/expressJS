@@ -44,9 +44,13 @@ router.post('/', (req, res, next) => {
                 faculty: faculty
             })
             newStudent.save().then(stu => {
-                uploadFile(req.files.file, stu, (file, err) => {
-                    res.json(stu)
-                })
+                if (req.files != null) {
+                    uploadFile(req.files.file, stu, (file, err) => {
+                        res.json(stu)
+                    })
+                } else {
+                    return res.json(stu)
+                }
             })
         }
     })
@@ -62,7 +66,7 @@ router.put('/:_id', (req, res, next) => {
                     return res.status(200).json(stu)
                 })
             })
-        }else{
+        } else {
             return res.status(200).json(stu)
         }
     }).catch(err => {
