@@ -32,10 +32,13 @@ const deleteUploadFile = async (fileName, cb) => {
 router.post('/', (req, res, next) => {
     const { stuId, name, major, faculty } = req.body
     const userObjId = req.uid
-    Student.findOne({ stuId: stuId }).then(stu => {
-        if (stu)
+    Student.findOne({ stuId: stuId, userId: userObjId }).then(stu => {
+        if (stu) {
+            console.log('====================================');
+            console.log('Student ID already exists')
+            console.log('====================================');
             return res.status(400).json({ stuId: 'Student ID already exists' })
-        else {
+        } else {
             const newStudent = new Student({
                 stuId: stuId,
                 userId: userObjId,
@@ -45,12 +48,13 @@ router.post('/', (req, res, next) => {
             })
             newStudent.save().then(stu => {
                 if (req.files != null) {
-                    uploadFile(req.files.file, stu, (file, err) => {
-                        res.json(stu)
-                    })
-                } else {
-                    return res.json(stu)
+                    uploadFile(req.files.file, stu, (file, err) => { })
                 }
+                console.log('====================================');
+                console.log("insert student success");
+                console.log(stu);
+                console.log('====================================');
+                res.status(200).json(stu)
             })
         }
     })

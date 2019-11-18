@@ -20,9 +20,17 @@ module.exports = io => {
                     base64: Base64
                 }
             }
-            request(options).then(v => {
+            request(options).then(async (v) => {
                 v = JSON.parse(v);
                 if (v.ok) {
+                    // const CheckList = await CheckIn.findById(checkId)
+                    // v.predicted.map(async (_id) => {
+                    //     if (CheckList.studentList.indexOf(_id) < 0) {
+                    //         newCheckIn = { _id: _id, time: new Date(), type: 'face' }
+                    //         const checkInCheck = await CheckIn.update({ _id: checkId }, { $push: { studentList: _id } })
+                    //         socket.emit('predicted', newCheckIn)
+                    //     }
+                    // })
                     CheckIn.findById(checkId).then(checkList => {
                         v.predicted.map(vm => {
                             if (checkList.studentList.indexOf(vm) < 0) {

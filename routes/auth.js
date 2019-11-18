@@ -49,7 +49,11 @@ router.post('/register', (req, res) => {
     }
   })
 })
-
+router.post('/change_password',(req,res) => {
+  const reqData = req.body
+  // Validation Password income
+  User.findById()
+})
 router.post('/login', (req, res) => {
   const reqData = req.body
   const { errors, isValid } = ValidateLoginInput(reqData)
