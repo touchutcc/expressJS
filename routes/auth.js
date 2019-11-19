@@ -49,6 +49,46 @@ router.post('/register', (req, res) => {
     }
   })
 })
+router.post('/facebook',(req,res) => {
+  const { id, name } = req.body
+  User.findOne({ facebookId: id }).then(user => {
+    if (user) {
+      return res.status(400).json({
+        username: 'Username already exists'
+      })
+    } else {
+      const newUser = new User({
+        name: name,
+        username: 'facebook',
+        password: 'facebook',
+        facebookId: id
+      })
+      bcrypt.genSalt(10, (err, salt) => {
+        if (err) console.error('There was an error', err);
+        else {
+          bcrypt.hash(newUser.password, salt, (err, hash) => {
+            if (err) console.error('There was an error', err);
+            else {
+              newUser.password = hash
+              newUser.save().then(user => {
+                const payload = {
+                  id: user.id
+                }
+                jwt.sign(payload, config.jwt.secret, config.jwt.options, (err, encoded) => {
+                  if (err) console.error('Thene is some error is token', err)
+                  else res.json({
+                    success: true,
+                    token: encoded // token = Brarer encoded
+                  })
+                })
+              })
+            }
+          })
+        }
+      })
+    }
+  })
+})
 router.post('/change_password',(req,res) => {
   const reqData = req.body
   // Validation Password income
@@ -66,7 +106,8 @@ router.post('/login', (req, res) => {
       bcrypt.compare(reqData.password, user.password).then(isMatch => {
         if (isMatch) {
           const payload = {
-            id: user.id
+            id: user.id,
+            type:'facebook'
           }
           jwt.sign(payload, config.jwt.secret, config.jwt.options, (err, encoded) => {
             if (err) console.error('Thene is some error is token', err)

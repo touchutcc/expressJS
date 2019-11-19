@@ -2,17 +2,21 @@ const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 
 const UserSchema = new Schema({
-    username: {
+    username: { //facebook
         type: String,
         required: true
     },
-    name: {
+    name: { //เอามาจาก facebook
         type: String,
         required: true
     },
-    password: {
+    password: { //facebook
         type: String,
         required: true
+    },
+    facebookId: { //_id
+        type: String,
+        required: false
     }
 }, { timestamps: true, versionKey: false })
 const User = mongoose.model('user', UserSchema)
