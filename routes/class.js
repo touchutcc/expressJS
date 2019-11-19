@@ -51,9 +51,7 @@ router.put('/:_id', (req, res, next) => {
 
 router.get('/:_id', (req, res, next) => {
     const { _id } = req.params
-    Class.find({
-        courseId: _id
-    }).then(courList => {
+    Class.find({courseId: _id}).then(courList => {
         res.status(200).json(courList)
     }).catch(err => {
         return res.status(500).json({ err: err });

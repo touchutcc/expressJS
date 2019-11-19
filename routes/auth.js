@@ -49,47 +49,43 @@ router.post('/register', (req, res) => {
     }
   })
 })
-router.post('/facebook',(req,res) => {
+router.post('/facebook', (req, res) => {
   const { id, name } = req.body
   User.findOne({ facebookId: id }).then(user => {
     if (user) {
-      return res.status(400).json({
-        username: 'Username already exists'
+      const payload = {
+        id: user.id
+      }
+      jwt.sign(payload, config.jwt.secret, config.jwt.options, (err, encoded) => {
+        if (err) console.error('Thene is some error is token', err)
+        else res.json({
+          success: true,
+          token: encoded // token = Brarer encoded
+        })
       })
     } else {
       const newUser = new User({
         name: name,
-        username: 'facebook',
-        password: 'facebook',
+        username: 'facebook' + id,
+        password: 'facebook' + id,
         facebookId: id
       })
-      bcrypt.genSalt(10, (err, salt) => {
-        if (err) console.error('There was an error', err);
-        else {
-          bcrypt.hash(newUser.password, salt, (err, hash) => {
-            if (err) console.error('There was an error', err);
-            else {
-              newUser.password = hash
-              newUser.save().then(user => {
-                const payload = {
-                  id: user.id
-                }
-                jwt.sign(payload, config.jwt.secret, config.jwt.options, (err, encoded) => {
-                  if (err) console.error('Thene is some error is token', err)
-                  else res.json({
-                    success: true,
-                    token: encoded // token = Brarer encoded
-                  })
-                })
-              })
-            }
-          })
+      newUser.save().then(user => {
+        const payload = {
+          id: user.id
         }
+        jwt.sign(payload, config.jwt.secret, config.jwt.options, (err, encoded) => {
+          if (err) console.error('Thene is some error is token', err)
+          else res.json({
+            success: true,
+            token: encoded // token = Brarer encoded
+          })
+        })
       })
     }
   })
 })
-router.post('/change_password',(req,res) => {
+router.post('/change_password', (req, res) => {
   const reqData = req.body
   // Validation Password income
   User.findById()
@@ -98,7 +94,7 @@ router.post('/login', (req, res) => {
   const reqData = req.body
   const { errors, isValid } = ValidateLoginInput(reqData)
   if (!isValid) return res.status(400).json(errors)
-  User.findOne({ username:reqData.username }).then(user => {
+  User.findOne({ username: reqData.username }).then(user => {
     if (!user) {
       errors.usename = 'Username not found'
       return res.status(400).json(errors)
@@ -107,7 +103,7 @@ router.post('/login', (req, res) => {
         if (isMatch) {
           const payload = {
             id: user.id,
-            type:'facebook'
+            type: 'facebook'
           }
           jwt.sign(payload, config.jwt.secret, config.jwt.options, (err, encoded) => {
             if (err) console.error('Thene is some error is token', err)
