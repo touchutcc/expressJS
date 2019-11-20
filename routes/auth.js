@@ -51,6 +51,8 @@ router.post('/register', (req, res) => {
 })
 router.post('/facebook', (req, res) => {
   const { id, name } = req.body
+  console.log(id,name);
+  
   User.findOne({ facebookId: id }).then(user => {
     if (user) {
       const payload = {
@@ -71,6 +73,8 @@ router.post('/facebook', (req, res) => {
         facebookId: id
       })
       newUser.save().then(user => {
+        console.log(user);
+        
         const payload = {
           id: user.id
         }
