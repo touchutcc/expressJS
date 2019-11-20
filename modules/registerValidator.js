@@ -9,10 +9,8 @@ module.exports = ValidateRegisterInput = data => {
     data.password = !isEmpty(data.password) ? data.password : ''
     data.password_confirm = !isEmpty(data.password_confirm) ? data.password_confirm : ''
 
-    if (!Validator.isLength(data.name, { min: 5, max: 30 }))
-        errors.username = 'Name must be between 5 to 30 chars'
     if (Validator.isEmpty(data.name))
-        errors.username = 'Name field is required'
+        errors.name = 'Name field is required'
     if (!Validator.isLength(data.username, { min: 2, max: 30 }))
         errors.username = 'Username must be between 2 to 30 chars'
     if (Validator.isEmpty(data.username))

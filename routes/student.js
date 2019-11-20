@@ -47,6 +47,9 @@ router.post('/', (req, res, next) => {
                 faculty: faculty
             })
             newStudent.save().then(stu => {
+                console.log('====================================');
+                console.log(req.files);
+                console.log('====================================');
                 if (req.files != null) {
                     uploadFile(req.files.file, stu, (file, err) => { })
                 }
