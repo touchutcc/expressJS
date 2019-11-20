@@ -49,5 +49,5 @@ module.exports = io => {
         const nowDate = (new Date()) / 1
         console.log(`Ping: ${nowDate}`);
         io.emit('ping', { data: nowDate })
-    }, 2000)
+    }, 5000)
 }

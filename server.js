@@ -53,7 +53,7 @@ mongoose.connect(url, options).then(() => {
   const options = require('./routes/options')
   const checkIn = require('./routes/checkIn')
   const PythonConnector = require('./routes/PythonConnector')
-  require('./routes/socket')(io)
+  //require('./routes/socket')(io) // disable socket.io
   // use module
   app.use('/auth', auth) //auth/login
   app.use('/semester', passportAuth, tokenToReq, semester)

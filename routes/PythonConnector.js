@@ -24,19 +24,18 @@ router.post('/model', (req, res) => {
 })
 router.delete('/model/pop/:id', (req, res) => {
     const { id } = req.params
-    // options = {
-    //     method:req.method,
-    //     uri:`${url}/model/pop`,
-    //     form:{
-    //         _id:id,
-    //     }
-    // }
-    // request(options).then(v => {
-    //     res.status(200).json(JSON.parse(v))
-    // }).catch(err => {
-    //     res.status(404).json(JSON.parse(err.response.body))
-    // })
-    res.status(200).json({ _id: id })
+    options = {
+        method: req.method,
+        uri: `${url}/model/pop`,
+        form: {
+            _id: id,
+        }
+    }
+    request(options).then(v => {
+        res.status(200).json(JSON.parse(v))
+    }).catch(err => {
+        res.status(404).json(JSON.parse(err.response.body))
+    })
 })
 router.get('/model/:id', (req, res) => {
     const { id } = req.params
