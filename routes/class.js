@@ -14,10 +14,8 @@ router.post('/', (req, res, next) => {
         startTime,
         endTime
     } = req.body
-    const { errors, isValid } = classValidator(req.body)
-    console.error(errors);
-
-    if (!isValid) return res.status(400).json(errors)
+    // const { errors, isValid } = classValidator(req.body)
+    // if (!isValid) return res.status(400).json(errors)
     Class.findOne({ group: group, courseId: _id }).then(clas => {
         if (clas) {
             return res.status(400).json({
