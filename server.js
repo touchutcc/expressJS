@@ -100,11 +100,11 @@ var Strategy = require('passport-facebook').Strategy;
 // with a user object, which will be set at `req.user` in route handlers after
 // authentication.
 passport.use(new Strategy({
-    clientID: '445952655996280',
-    clientSecret: '3633c897e9e1aa0da56ed118ff8b0cbf',
-    callbackURL: '/return'
-  },
-  function(accessToken, refreshToken, profile, cb) {
+  clientID: '445952655996280',
+  clientSecret: '3633c897e9e1aa0da56ed118ff8b0cbf',
+  callbackURL: '/return'
+},
+  function (accessToken, refreshToken, profile, cb) {
     // In this example, the user's Facebook profile is supplied as the user
     // record.  In a production-quality application, the Facebook profile should
     // be associated with a user record in the application's database, which
@@ -123,11 +123,11 @@ passport.use(new Strategy({
 // from the database when deserializing.  However, due to the fact that this
 // example does not have a database, the complete Facebook profile is serialized
 // and deserialized.
-passport.serializeUser(function(user, cb) {
+passport.serializeUser(function (user, cb) {
   cb(null, user);
 });
 
-passport.deserializeUser(function(obj, cb) {
+passport.deserializeUser(function (obj, cb) {
   cb(null, obj);
 });
 
@@ -154,7 +154,7 @@ app.use(passport.session());
 
 // Define routes.
 app.get('/',
-  function(req, res) {
+  function (req, res) {
     res.send({ user: req.user });
   });
 
@@ -166,16 +166,16 @@ app.get('/',
 app.get('/login/facebook',
   passport.authenticate('facebook'));
 
-app.get('/return', 
-  passport.authenticate('facebook',),
-  function(req, res) {
+app.get('/return',
+  passport.authenticate('facebook'),
+  function (req, res) {
     console.log(req.data);
-    res.send({ok:true})
-    
+    res.send({ ok: true })
+
   });
 
 app.get('/profile',
   require('connect-ensure-login').ensureLoggedIn(),
-  function(req, res){
-    res.send( { user: req.user });
+  function (req, res) {
+    res.send({ user: req.user });
   });
