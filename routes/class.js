@@ -9,19 +9,15 @@ const classValidator = require('../modules/classValidator')
 
 router.post('/', (req, res, next) => {
     // standard info
-    const { _id, group, location,
-        day,
-        startTime,
-        endTime
-    } = req.body
+    const { _id, group, location, day, startTime, endTime } = req.body
     // const { errors, isValid } = classValidator(req.body)
     // if (!isValid) return res.status(400).json(errors)
-    Class.findOne({ group: group, courseId: _id }).then(clas => {
+    /*Class.findOne({ group: group, courseId: _id }).then(clas => {
         if (clas) {
             return res.status(400).json({
                 group: 'Group already exists'
             })
-        } else {
+        } else {*/
             const newClass = new Class({
                 courseId: _id,
                 group: group,
@@ -35,21 +31,21 @@ router.post('/', (req, res, next) => {
             }).catch(err => {
                 return res.status(400).json(err);
             })
-        }
-    })
+      //  }
+    //})
 })
 
 router.put('/:_id', (req, res, next) => {
     const { _id } = req.params
     const data = req.body
-    Class.updateOne({_id:_id},data).then(classOk => {
+    Class.updateOne({ _id: _id }, data).then(classOk => {
         res.status(200).json(classOk)
     })
 })
 
 router.get('/:_id', (req, res, next) => {
     const { _id } = req.params
-    Class.find({courseId: _id}).then(courList => {
+    Class.find({ courseId: _id }).then(courList => {
         res.status(200).json(courList)
     }).catch(err => {
         return res.status(500).json({ err: err });

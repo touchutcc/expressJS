@@ -13,6 +13,8 @@ var PythonServer = path.join(dirProject, 'vgg_deep_server')
 var dataBase = path.join(PythonServer, 'database')
 var dataUpload = path.join(dataBase, 'dataUpload')
 
+const { pythonServer } = require('../config')
+
 const uploadFile = async (file, stu, cb) => {
     const uploadFile = file
     const fileName = file.name
@@ -34,9 +36,6 @@ router.post('/', (req, res, next) => {
     const userObjId = req.uid
     Student.findOne({ stuId: stuId, userId: userObjId }).then(stu => {
         if (stu) {
-            console.log('====================================');
-            console.log('Student ID already exists')
-            console.log('====================================');
             return res.status(400).json({ stuId: 'Student ID already exists' })
         } else {
             const newStudent = new Student({
@@ -47,17 +46,33 @@ router.post('/', (req, res, next) => {
                 faculty: faculty
             })
             newStudent.save().then(stu => {
-                console.log('====================================');
-                console.log(req.files);
-                console.log('====================================');
-                if (req.files != null) {
-                    uploadFile(req.files.file, stu, (file, err) => { })
+                var dumpRes = {
+                    _id: stu._id,
+                    stuId: stu.stuId,
+                    name: stu.name,
+                    major: stu.major,
+                    faculty: stu, faculty,
+                    upload: false,
+                    dataSet: false
                 }
-                console.log('====================================');
-                console.log("insert student success");
-                console.log(stu);
-                console.log('====================================');
-                res.status(200).json(stu)
+                if (req.files != null) {
+                    uploadFile(req.files.file, stu, (file, err) => {
+                        dumpRes.upload = true
+                        options = {
+                            method: 'post',
+                            uri: 'http://127.0.0.1:5000/data_set/video',
+                            form: {
+                                name: file
+                            }
+                        }
+                        request(options).then(async (v) => {
+                            dumpRes.dataSet = false
+                            return res.status(200).json(dumpRes)
+                        })
+                    })
+                } else {
+                    res.status(200).json(dumpRes)
+                }
             })
         }
     })
@@ -90,6 +105,21 @@ router.get('/:stuId', (req, res, next) => {
         })
     })
 })
+
+router.get('/video/:stuId', (req, res, next) => {
+    const { stuId } = req.params
+    const pathFile = path.join(dataUpload, `${stuId}.mp4`)
+    const stat = fs.statSync(pathFile)
+    const fileSize = stat.size
+    const file = fs.createReadStream(pathFile)
+    const head = {
+        'Content-Length': fileSize,
+        'Content-Type': 'video/mp4',
+      }
+      res.writeHead(200, head)
+      file.pipe(res)
+})
+
 
 router.delete('/:_id', (req, res, next) => {
     const { _id } = req.params
