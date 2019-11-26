@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const excelToJson = require('convert-excel-to-json');
 const fs = require('fs')
 const path = require('path')
 const request = require('request-promise')
@@ -31,6 +32,33 @@ const deleteUploadFile = async (fileName, cb) => {
         cb(err)
     })
 }
+
+router.post('/readExcel', (req, res) => {
+    const reqFile = req.files
+    const file = reqFile.file
+    const userObjId = req.uid
+    console.log('====================================');
+    const result = excelToJson({
+        source: file.data, // fs.readFileSync return a Buffer
+    });
+    firstKey = Object.keys(result)[0]
+    resultOfFirstKey = result[firstKey]
+    console.log('====================================');
+    return res.json({
+        ok: true,
+        data: resultOfFirstKey
+    })
+})
+router.post('/many', (req, res) => {
+    const data = req.body
+    const userObjId = mongoose.Types.ObjectId(req.uid);
+    data.map(i => {
+        i['userId'] = userObjId
+    })
+    Student.insertMany(data).then(manyStu => {
+        return res.status(200).json(manyStu)
+    })
+})
 router.post('/', (req, res, next) => {
     const { stuId, name, major, faculty } = req.body
     const userObjId = req.uid
@@ -115,9 +143,9 @@ router.get('/video/:stuId', (req, res, next) => {
     const head = {
         'Content-Length': fileSize,
         'Content-Type': 'video/mp4',
-      }
-      res.writeHead(200, head)
-      file.pipe(res)
+    }
+    res.writeHead(200, head)
+    file.pipe(res)
 })
 
 
